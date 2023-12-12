@@ -1,0 +1,33 @@
+name: Site Health Check
+
+on:
+  schedule:
+    - cron: '45 18 * * 2'
+
+jobs:
+  site_test:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check deployed service URL on Tuesday 18:45
+        uses: jtalk/url-health-check-action@v3.2
+        with:
+          url:  https://pokedex-list.fly.dev/
+  webhook_notify:
+    needs: [site_test]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Successful Deployment
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: ${{success()}}
+        with:
+          severity: info
+          text: Site up and running. No issues 
+          webhookUrl: ${{secrets.DISCORD_WEBHOOK}}
+      - name: Failed Deployment
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: ${{failure()}}
+        with:
+          severity: error
+          text: Site down. Not loading
+          webhookUrl: ${{secrets.DISCORD_WEBHOOK}}
