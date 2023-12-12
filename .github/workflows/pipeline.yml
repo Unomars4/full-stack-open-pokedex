@@ -56,7 +56,7 @@ jobs:
         with:
           severity: info
           text: A new version of pokedex deployed
-          description: to https://pokedex-list.fly.dev by ${{github.event.*.author.username}}
+          description: to https://pokedex-list.fly.dev by ${{github.event.commits.*.author.username}}
           webhookUrl: ${{secrets.DISCORD_WEBHOOK}}
       - name: Failed Deployment
         uses: rjstone/discord-webhook-notify@v1.0.4
@@ -64,16 +64,5 @@ jobs:
         with:
           severity: error
           text: Build Failed
-          description: commit ${{github.event.*.url}} by unomars4 broke the build :(
+          description: commit ${{github.event.commits.*.url}} by unomars4 broke the build :(
           webhookUrl: ${{secrets.DISCORD_WEBHOOK}}
-      - name: Cancelled Deployment
-        uses: rjstone/discord-webhook-notify@v1.0.4
-        if: ${{cancelled()}} && ${{github.event_name == 'pull_request'}}
-        with:
-          severity: warn
-          details: Build Cancelled!
-          webhookUrl: ${{secrets.DISCORD_WEBHOOK}}
-
-
-        
-
