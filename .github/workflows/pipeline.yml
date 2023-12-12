@@ -52,7 +52,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Successful Deployment
         uses: rjstone/discord-webhook-notify@v1.0.4
-        if: ${{success()}} && ${{github.event_name == 'pull_request'}}
+        if: ${{success() && github.event_name == 'pull_request'}}
         with:
           severity: info
           text: A new version of pokedex deployed
@@ -60,7 +60,7 @@ jobs:
           webhookUrl: ${{secrets.DISCORD_WEBHOOK}}
       - name: Failed Deployment
         uses: rjstone/discord-webhook-notify@v1.0.4
-        if: ${{failure()}} && ${{github.event_name == 'pull_request'}}
+        if: ${{failure() && github.event_name == 'pull_request'}}
         with:
           severity: error
           text: Build Failed
