@@ -50,21 +50,21 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Successful Deployment
-      - uses: rjstone/discord-webhook-notify@v1.0.4
+        uses: rjstone/discord-webhook-notify@v1.0.4
         if: ${{success()}}
         with:
           severity: info
           details: Build Succeded!
           webhookUrl: ${{secrets.DISCORD_WEBHOOK}}
       - name: Failed Deployment
-      - uses: rjstone/discord-webhook-notify@v1.0.4
+        uses: rjstone/discord-webhook-notify@v1.0.4
         if: ${{failure()}}
         with:
           severity: error
           details: Build Failed!
           webhookUrl: ${{secrets.DISCORD_WEBHOOK}}
       - name: Cancelled Deployment
-      - uses: rjstone/discord-webhook-notify@v1.0.4
+        uses: rjstone/discord-webhook-notify@v1.0.4
         if: ${{cancelled()}}
         with:
           severity: warn
