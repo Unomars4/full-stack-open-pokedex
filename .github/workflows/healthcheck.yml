@@ -3,18 +3,32 @@ name: Site Health Check
 on:
   schedule:
     - cron: '0 17 * * 2'
+    - cron: '0 10 * * 3'
+  push:
+    branches:
+      - master
 
 jobs:
   site_test:
     runs-on: ubuntu-20.04
     steps:
+      - uses: actions/checkout@v3 
+      - name: Check site health on push to master
+        if: ${{github.event_name == 'push'}}
+        uses: jtalk/url-health-check-action@v3.2
+        with:
+          url:  https://pokedex-list.fly.dev/
       - name: Check deployed service URL on Tuesday 17:00 UTC
         if: github.event.schedule == '0 17 * * 2'
         uses: jtalk/url-health-check-action@v3.2
         with:
           url:  https://pokedex-list.fly.dev/
+      - name: Check site health on Wednesday 10:00 UTC
+        if: github.event.schedule == '0 10 * * 3'
+        uses: jtalk/url-health-check-action@v3.2
+        with:
+          url:  https://pokedex-list.fly.dev/
   webhook_notify:
-    needs: [site_test]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
